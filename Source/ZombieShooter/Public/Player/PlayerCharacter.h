@@ -11,6 +11,21 @@ class ZOMBIESHOOTER_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+
+	void AddWeapon(class AZSWeapon* Weapon);
+
+	void RemoveWeapon(class AZSWeapon* Weapon);
+
+
+
+	/*Locally Starts weapon fire*/
+	void StartWeaponFire();
+
+	void StopWeaponFire();
+
+	bool CanFire() const;
+
+	bool CanReload() const;
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
