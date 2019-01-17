@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ZSWeapon.h"
+#include "../../Public/Weapons/ZSWeapon.h"
+#include "../../Public/Player/PlayerCharacter.h"
 
 // Sets default values
-AZSWeapon::AZSWeapon()
+AZSWeapon::AZSWeapon(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,3 +25,84 @@ void AZSWeapon::Tick(float DeltaTime)
 
 }
 
+void AZSWeapon::ClientStartReload_Implementation()
+{
+
+}
+
+void AZSWeapon::PostInitializeComponents()
+{
+}
+
+void AZSWeapon::Destroyed()
+{
+}
+
+void AZSWeapon::GiveAmmo(int AddAmount)
+{
+}
+
+void AZSWeapon::UseAmmo()
+{
+}
+
+void AZSWeapon::StartFire()
+{
+}
+
+void AZSWeapon::StopFire()
+{
+}
+
+void AZSWeapon::StartReload(bool FromReplication)
+{
+}
+
+void AZSWeapon::StopReload()
+{
+}
+
+void AZSWeapon::ReloadWeapon()
+{
+}
+
+
+bool AZSWeapon::CanFire() const
+{
+	return false;
+}
+
+bool AZSWeapon::CanReload() const
+{
+	return false;
+}
+
+void AZSWeapon::OnEquip(const AZSWeapon * LastWeapon)
+{
+}
+
+void AZSWeapon::OnEquipFinished()
+{
+}
+
+void AZSWeapon::OnUnEquip()
+{
+}
+
+void AZSWeapon::OnEnterInventory(APlayerCharacter * NewOwner)
+{
+}
+
+void AZSWeapon::OnLeaveInventory()
+{
+}
+
+bool AZSWeapon::IsEquipped() const
+{
+	return false;
+}
+
+bool AZSWeapon::IsAttachedToPawn() const
+{
+	return false;
+}

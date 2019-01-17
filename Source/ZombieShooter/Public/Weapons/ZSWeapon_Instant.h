@@ -12,6 +12,6 @@
 UCLASS()
 class ZOMBIESHOOTER_API AZSWeapon_Instant : public AZSWeapon
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 	
 };

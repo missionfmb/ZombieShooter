@@ -80,7 +80,7 @@ class ZOMBIESHOOTER_API AZSWeapon : public AActor
 	GENERATED_UCLASS_BODY()
 
 
-		virtual void PostInitializeComponents() override;
+	virtual void PostInitializeComponents() override;
 
 	virtual void Destroyed() override;
 
@@ -112,7 +112,7 @@ class ZOMBIESHOOTER_API AZSWeapon : public AActor
 
 	virtual void OnUnEquip();
 
-	virtual void OnEnterInventory(APlayerCharacter* NewOwner);
+	virtual void OnEnterInventory(class APlayerCharacter* NewOwner);
 
 	virtual void OnLeaveInventory();
 
@@ -144,6 +144,8 @@ class ZOMBIESHOOTER_API AZSWeapon : public AActor
 	bool CanFire() const;
 
 	bool CanReload() const;
+
+	
 
 
 

@@ -9,9 +9,9 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(config = Game)
 class ZOMBIESHOOTER_API AZSGameMode : public AGameMode
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 	
 };
