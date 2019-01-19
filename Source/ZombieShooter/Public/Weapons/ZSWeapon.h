@@ -101,6 +101,12 @@ class ZOMBIESHOOTER_API AZSWeapon : public AActor
 		return EAmmoType::EBullet;
 	}
 
+
+	/** get weapon mesh (needs pawn owner to determine variant) */
+	USkeletalMeshComponent* GetWeaponMesh() const;
+
+
+
 	/*
 	* Inventory
 	*/
@@ -145,19 +151,47 @@ class ZOMBIESHOOTER_API AZSWeapon : public AActor
 
 	bool CanReload() const;
 
-	
+	/** check if weapon has infinite ammo (include owner's cheats) */
+	bool HasInfiniteAmmo() const;
+
+	/** check if weapon has infinite clip (include owner's cheats) */
+	bool HasInfiniteClip() const;
 
 
 
 
+protected:
+
+	void AttachMeshToPawn();
+
+	void DetachMeshFromPawn();
 
 
 
+private:
+	/** weapon mesh: 1st person view */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USkeletalMeshComponent* Mesh1P;
 
+	/** weapon mesh: 3rd person view */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USkeletalMeshComponent* Mesh3P;
 
-public:	
-	// Sets default values for this actor's properties
-	AZSWeapon();
+protected:
+
+	/** pawn owner */
+	UPROPERTY(Transient, ReplicatedUsing = OnRep_MyPawn)
+		class APlayerCharacter* MyPawn;
+
+	/** weapon data */
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+		FWeaponData WeaponConfig;
+
+	//////////////////////////////////////////////////////////////////////////
+	// Replication & effects
+
+	UFUNCTION()
+		void OnRep_MyPawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -166,5 +200,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	/** set the weapon's owning pawn */
+	void SetOwningPawn(APlayerCharacter* NewOwner);
 
 };

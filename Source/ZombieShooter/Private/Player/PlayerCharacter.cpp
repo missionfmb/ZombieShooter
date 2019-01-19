@@ -2,8 +2,10 @@
 
 #include "../../Public/Player/PlayerCharacter.h"
 #include "../../Public/Player/ZSCharacterMovementComponent.h"
+#include "../../Public/Weapons/ZSWeapon.h"
 #include "Engine/World.h"
 #include "ZombieShooter.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -68,6 +70,38 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &APlayerCharacter::LookUpAtRate);
 
+}
+
+void APlayerCharacter::SetCurrentWeapon(class AZSWeapon* NewWeapon, class AZSWeapon* LastWeapon /*= NULL*/)
+{
+	AZSWeapon* LocalLastWeapon = nullptr;
+
+	if (LastWeapon != NULL)
+	{
+		LocalLastWeapon = LastWeapon;
+	}
+	else if (NewWeapon != CurrentWeapon)
+	{
+		LocalLastWeapon = CurrentWeapon;
+	}
+
+	if (LocalLastWeapon)
+	{
+		LocalLastWeapon->OnUnEquip();
+	}
+
+	CurrentWeapon = NewWeapon;
+
+	if (NewWeapon)
+	{
+		NewWeapon->SetOwningPawn(this);
+		NewWeapon->OnEquip(LastWeapon);
+	}
+}
+
+void APlayerCharacter::OnRep_CurrentWeapon(AZSWeapon * LastWeapon)
+{
+	SetCurrentWeapon(CurrentWeapon, LastWeapon);
 }
 
 void APlayerCharacter::AddWeapon(AZSWeapon * Weapon)
@@ -159,7 +193,42 @@ void APlayerCharacter::LookUpAtRate(float Val)
 	AddControllerPitchInput(Val * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
+FName APlayerCharacter::GetWeaponAttachPoint() const
+{
+	return WeaponAttachPoint;
+}
 
+USkeletalMeshComponent * APlayerCharacter::GetSpecificPawnMesh(bool WantFirstPerson) const
+{
+	return WantFirstPerson == true ? Mesh1P : GetMesh();
+}
+
+bool APlayerCharacter::IsFirstPerson() const
+{
+	return IsAlive() && Controller && Controller->IsLocalPlayerController();
+}
+
+bool APlayerCharacter::IsAlive() const
+{
+	return Health > 0;
+}
+
+USkeletalMeshComponent * APlayerCharacter::GetPawnMesh() const
+{
+	return IsFirstPerson() ? Mesh1P : GetMesh();
+}
+
+void APlayerCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// only to local owner: weapon change requests are locally instigated, other clients don't need it
+	DOREPLIFETIME_CONDITION(APlayerCharacter, Inventory, COND_OwnerOnly);
+
+	// everyone
+	DOREPLIFETIME(APlayerCharacter, CurrentWeapon);
+	DOREPLIFETIME(APlayerCharacter, Health);
+}
 
 
 
