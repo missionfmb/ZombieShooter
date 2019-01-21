@@ -120,12 +120,20 @@ void APlayerCharacter::OnRep_CurrentWeapon(AZSWeapon * LastWeapon)
 
 void APlayerCharacter::AddWeapon(AZSWeapon * Weapon)
 {
-	//TODO
+	if (Weapon && Role == ROLE_Authority)
+	{
+		Weapon->OnEnterInventory(this);
+		Inventory.AddUnique(Weapon);
+	}
 }
 
 void APlayerCharacter::RemoveWeapon(AZSWeapon * Weapon)
 {
-	//TODO
+	if (Weapon && Role == ROLE_Authority)
+	{
+		Weapon->OnLeaveInventory();
+		Inventory.RemoveSingle(Weapon);
+	}
 }
 
 void APlayerCharacter::StartWeaponFire()

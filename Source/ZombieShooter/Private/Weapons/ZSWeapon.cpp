@@ -166,6 +166,7 @@ void AZSWeapon::SetOwningPawn(APlayerCharacter* NewOwner)
 
 void AZSWeapon::OnEquip(const AZSWeapon * LastWeapon)
 {
+	AttachMeshToPawn();
 }
 
 void AZSWeapon::OnEquipFinished()
@@ -178,10 +179,19 @@ void AZSWeapon::OnUnEquip()
 
 void AZSWeapon::OnEnterInventory(APlayerCharacter * NewOwner)
 {
+	SetOwningPawn(NewOwner);
 }
 
 void AZSWeapon::OnLeaveInventory()
 {
+	if (IsAttachedToPawn())
+	{
+		OnUnEquip();
+	}
+	if (Role == ROLE_Authority)
+	{
+		SetOwningPawn(NULL);
+	}
 }
 
 bool AZSWeapon::IsEquipped() const
